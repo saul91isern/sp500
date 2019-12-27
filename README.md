@@ -7,3 +7,4 @@ conda deactivate
 
 jupyter notebook ny50.ipynb
 jupyter notebook sp500.ipynb
+jupyter notebook rl.ipynb
