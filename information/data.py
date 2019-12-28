@@ -1,5 +1,6 @@
 from sklearn import preprocessing
 from statsmodels import regression
+import joblib
 import statsmodels.api as sm
 import numpy as np
 
@@ -67,19 +68,23 @@ class PreProcessing:
         
         return train, test
 
-    def normalize_data(self, train, test):
+    def normalize_data(self, train, test, path=None):
         normalizer = preprocessing.Normalizer()
         train = normalizer.fit_transform(train)
-        test = normalizer.transform(test)        
+        test = normalizer.transform(test)  
+        if path: joblib.dump(normalizer, path)
         return train, test
     
-    def formate_data(self, data, x_len, y_len):
+    def formate_data(self, data, x_len, y_len, with_target=False):
         x_s = []
         y_s = []
         
         for index in range(len(data) - (x_len + y_len)):
-            # We delete the close price from the xs
-            x_s.append(data[index: (index + x_len), :-1])
+            if not with_target:
+                # We delete the close price from the xs
+                x_s.append(data[index: (index + x_len), :-1])
+            else:
+                x_s.append(data[index: (index + x_len), :])
             # We just want the close price as target variable
             y_s.append(data[(index + x_len):(index + x_len + y_len), -1])
         
